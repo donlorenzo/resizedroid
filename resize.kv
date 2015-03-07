@@ -1,0 +1,164 @@
+#:kivy 1.1.0
+<Label>:
+    font_size: 20
+
+<BoxLayout>:
+    padding: 10
+
+<Resizer>:
+    expo: expo_slider
+    intro: intro_label
+    resize: resize_btn
+    cancel: cancel_btn
+    quality: quality_slider
+    btn_1_8: btn_1_8
+    btn_1_4: btn_1_4
+    btn_1_3: btn_1_3
+    btn_1_2: btn_1_2
+    btn_2_3: btn_2_3
+    btn_3_4: btn_3_4
+    btn_1_1: btn_1_1
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.size
+        padding: 10
+        spacing: 10
+    
+        BoxLayout:
+            orientation: 'horizontal'
+                        
+            Label:
+                id: intro_label
+                text: "Load Image..."
+
+            Button:
+                text: "Load"
+                on_release: root.show_load()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            center: self.parent.width /2., self.parent.top -20
+            
+
+            Label:
+                text: "Size:"
+                size_hint_x: None
+                
+            Slider:
+                id: expo_slider
+                min: -5
+                max: 2
+                step: .1
+                value: 0
+
+            Label:
+                id: percentage_label
+                text: str(int(100 * 2**expo_slider.value)) + " %"
+                size_hint_x: None
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            size_hint: 1, .9
+
+            Button:
+                id: btn_1_8
+                text: "1/8"
+                on_release: root.set_preset(-3)
+            Button:
+                id: btn_1_4
+                text: "1/4"
+                on_release: root.set_preset(-2)
+            Button:
+                id: btn_1_3
+                text: "1/3"
+                on_release: root.set_preset(-1.5849625007213006)
+            Button:
+                id: btn_1_2
+                text: "1/2"
+                on_release: root.set_preset(-1)
+            Button:
+                id: btn_2_3
+                text: "2/3"
+                on_release: root.set_preset(-0.5849625007211561)
+            Button:
+                id: btn_3_4
+                text: "3/4"
+                on_release: root.set_preset(-0.4150374992788438)
+            Button:
+                id: btn_1_1
+                text: "1/1"
+                on_release: root.set_preset(0)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .9
+    
+            Label:
+                id: width_label
+                text: "Width: " + str(int(root.w * 2**expo_slider.value))
+
+            Label:
+                id: height_label
+                text: "Height: " + str(int(root.h * 2**expo_slider.value))
+
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Label: 
+                text: "Quality:"
+                size_hint_x: None
+            
+            Slider:
+                id: quality_slider
+                min: 1
+                max: 100
+                step: 1
+                value: 90
+
+            Label:
+                id: resize_label
+                text: str(int(quality_slider.value))
+                size_hint_x: None
+            
+        Button:
+            id: resize_btn
+            text: "Resize"
+            on_release: root.on_resize()
+
+        Button:
+            id: resize_btn
+            text: "Resize and Send"
+            on_release: root.on_resize_and_send()
+
+        Button:
+            id: cancel_btn
+            text: "Cancel"
+            on_release: root.on_cancel()
+
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+
+        FileChooserListView:
+            id: filechooser
+#            rootpath: "/home/lorenz/src/resizedroid"
+#            path: "/home/lorenz/src/resizedroid"
+            filters: ["*.jpg", "*.JPG", "*.jpeg"]
+#            dirselect: True
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
